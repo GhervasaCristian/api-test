@@ -1,0 +1,37 @@
+# Next.js build artifacts
+.next/
+out/
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Build outputs
+dist/
+build/
+.turbo/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+*.log
+
+# SWC binaries (Next.js internals) - often cause issues with file size/names
+*.node
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+/tmp/
+.next-swc*
