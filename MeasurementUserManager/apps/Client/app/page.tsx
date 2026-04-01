@@ -44,7 +44,7 @@ export default function ClientPage() {
     );
   }
 
-  // Comentariu pentru facultate: Formular simplu de login
+  // login
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="bg-white dark:bg-green-900 p-8 rounded-2xl shadow-xl max-w-sm w-full">

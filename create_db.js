@@ -4,7 +4,7 @@ const path = require('path');
 const rootDir = path.join(__dirname, 'MeasurementUserManager');
 
 const files = {
-  'packages/shared/db.ts': `// Comentariu pentru facultate: Aceasta este "baza de date" in-memory
+  'packages/shared/db.ts': `// in-memory database
 export type User = {
   id: string;
   username: string;
@@ -13,10 +13,10 @@ export type User = {
   createdAt: string;
 };
 
-// Array of users pentru "Măsurători de mediu"
+// Array of users
 let users: User[] = [];
 
-// Functii CRUD
+// CRUD fcn
 
 export function getAllUsers() {
   return users.map(u => {
@@ -31,10 +31,8 @@ export function getUserById(id: string) {
   const { password, ...rest } = user;
   return rest;
 }
-
+//return functions
 export function getUserByUsername(username: string) {
-  // Comentariu pentru facultate: aici returnăm și parola pentru simplificare la login-ul local din Server Action, 
-  // dar intr-o aplicatie reala nu o trimitem.
   return users.find(u => u.username === username) || null;
 }
 
@@ -44,7 +42,7 @@ export function createUser(username: string, password: string, email: string) {
   const newUser: User = {
     id,
     username,
-    password, // plain text for simplicity as requested
+    password,
     email,
     createdAt: new Date().toISOString()
   };

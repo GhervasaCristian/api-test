@@ -69,7 +69,7 @@ export default function AdminPage() {
     }
   };
 
-  // Când selectăm un user cu radio button, populăm formularele pentru a putea fi ușor de editat via PUT
+  // auto pop at radio selection
   const onSelectUser = (u: any) => {
     setSelectedUserId(u.id);
     setFormData({ username: u.username || "", email: u.email || "", password: u.password || "" });

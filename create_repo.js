@@ -155,18 +155,18 @@ export default function RootLayout({
   'apps/UserCreator/app/api/users/route.ts': `import { NextRequest, NextResponse } from "next/server";
 import { getAllUsers, createUser, getUserByUsername } from "shared/db";
 
-// Comentariu pentru facultate: Returnăm toți utilizatorii
+// return users
 export async function GET() {
   return NextResponse.json(getAllUsers(), { status: 200 });
 }
 
-// Comentariu pentru facultate: Creăm un utilizator nou
+// create user
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { username, password, email } = body;
     
-    // Verificăm dacă există deja
+    // check exist 
     const exists = getUserByUsername(username);
     if (exists) {
       return NextResponse.json({ message: "Utilizatorul există deja!" }, { status: 400 });
@@ -181,14 +181,14 @@ export async function POST(req: NextRequest) {
   'apps/UserCreator/app/api/users/[id]/route.ts': `import { NextRequest, NextResponse } from "next/server";
 import { getUserById, updateUser, deleteUser } from "shared/db";
 
-// Pentru GET by ID
+// GET by ID
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   const user = getUserById(params.id);
   if (!user) return NextResponse.json({ message: "Nu a fost găsit" }, { status: 404 });
   return NextResponse.json(user, { status: 200 });
 }
 
-// Pentru PUT (Update)
+// PUT (Update)
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const body = await req.json();
@@ -201,7 +201,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-// Pentru DELETE
+// DELETE
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   const success = deleteUser(params.id);
   if (!success) return NextResponse.json({ message: "Nu a fost găsit" }, { status: 404 });
@@ -210,7 +210,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   'apps/UserCreator/app/api/users/check/route.ts': `import { NextRequest, NextResponse } from "next/server";
 import { getUserByUsername } from "shared/db";
 
-// Verifica existenta unui user (GET prin search params: ?username=...)
+// (GET search params: ?username=...)
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const username = searchParams.get("username");
@@ -227,7 +227,7 @@ export async function GET(req: NextRequest) {
   'apps/UserCreator/app/page.tsx': `"use client";
 import { useState, useEffect } from "react";
 
-// Comentariu pentru facultate: Aceasta este pagina principala de admin
+//Main admin pg
 export default function AdminPage() {
   const [users, setUsers] = useState<any[]>([]);
   const [formData, setFormData] = useState({ username: "", password: "", email: "" });
@@ -469,11 +469,9 @@ export default function RootLayout({
 }`,
   'apps/Client/app/page.tsx': `"use client";
 import { useState } from "react";
-// Comentariu pentru facultate: Clientul face request spre baza in-memory prin server action / API sau direct in fisierul comun
+// client request
 import { getUserByUsername, getAllUsers } from "shared/db";
 
-// Pentru simplitate extremă (deoarece suntem într-un monorepo și putem importa "shared/db" direct în server actions),
-// vom folosi un Server Action simulativ
 import { loginUser, fetchAllUsers } from "./actions";
 
 export default function ClientPage() {
@@ -517,7 +515,7 @@ export default function ClientPage() {
     );
   }
 
-  // Comentariu pentru facultate: Formular simplu de login
+  // login
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="bg-white dark:bg-green-900 p-8 rounded-2xl shadow-xl max-w-sm w-full">
@@ -542,7 +540,7 @@ export default function ClientPage() {
   'apps/Client/app/actions.ts': `"use server";
 import { getUserByUsername, getAllUsers } from "shared/db";
 
-// Comentariu pentru facultate: Server action pentru a verifica simplu logarea pe partea de server
+// server login check - 
 export async function loginUser(user: string, pass: string) {
   const account = getUserByUsername(user);
   if (account && account.password === pass) {
