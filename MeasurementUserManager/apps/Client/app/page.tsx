@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-// fetch users via server action
+import { LogIn, LogOut, Users, Leaf, ShieldCheck, Mail } from "lucide-react";
 import { loginUser, fetchAllUsers } from "./actions";
 
 export default function ClientPage() {
@@ -11,57 +11,87 @@ export default function ClientPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = await loginUser(username, password);
-    if (success) {
+    if (await loginUser(username, password)) {
       setIsLogged(true);
-      const all = await fetchAllUsers();
-      setUsersList(all);
-    } else {
-      alert("Autentificare eșuată! Verifică datele.");
-    }
+      setUsersList(await fetchAllUsers());
+    } else alert("auth failed");
   }
 
   if (isLogged) {
     return (
-      <div className="min-h-screen flex flex-col items-center p-8">
-        <h1 className="text-4xl font-bold mb-4 text-green-700 dark:text-green-300">Welcome, {username}!</h1>
-        <p className="mb-8">Măsurători de mediu - Platformă Acces</p>
-        
-        <button onClick={() => setIsLogged(false)} className="bg-red-600 text-white px-4 py-2 rounded mb-8 shadow hover:bg-red-700 transition">Logout</button>
+      <div className="min-h-screen bg-emerald-950 text-emerald-50 p-4 md:p-8 font-sans">
+        <div className="max-w-4xl mx-auto space-y-8">
+          <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-8">
+            <div className="flex items-center gap-3">
+              <div className="bg-emerald-500/20 p-2 rounded-xl border border-emerald-500/30">
+                <Leaf className="text-emerald-400 w-6 h-6" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold tracking-tight text-emerald-100">Pannel Portal</h1>
+                <p className="text-emerald-500 text-sm">Welcome back, <span className="text-emerald-300 font-bold">{username}</span></p>
+              </div>
+            </div>
+            <button onClick={() => setIsLogged(false)} className="flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold px-4 py-2.5 rounded-xl border border-red-500/20 transition-all uppercase"><LogOut size={14}/> logout</button>
+          </header>
 
-        <div className="w-full max-w-2xl bg-white dark:bg-green-900 rounded-xl shadow-lg p-6">
-          <h2 className="text-2xl font-semibold mb-4 border-b pb-2">Toți Utilizatorii Înregistrați</h2>
-          <ul className="space-y-3">
-            {usersList.map((u) => (
-              <li key={u.id} className="p-3 bg-gray-50 dark:bg-green-800 rounded shadow-sm flex justify-between">
-                <span className="font-medium text-lg">{u.username}</span>
-                <span className="text-sm opacity-70">{u.email}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="grid grid-cols-1 gap-6">
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl backdrop-blur-xl">
+              <div className="flex items-center gap-2 text-emerald-400 font-semibold text-sm uppercase tracking-widest mb-6">
+                <Users size={16} /> Community Directory
+              </div>
+              <div className="flex flex-col gap-1.5">
+                {usersList.map((u) => (
+                  <div key={u.id} className="p-2.5 bg-emerald-900/30 border border-emerald-500/10 rounded-xl flex items-center justify-between hover:bg-emerald-500/10 transition-all">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 shadow-inner">
+                        <Users size={14} />
+                      </div>
+                      <span className="font-bold text-sm text-emerald-100">{u.username}</span>
+                    </div>
+                    <div className="flex items-center gap-2 px-3 py-1 bg-black/20 rounded-lg border border-white/5">
+                      <Mail size={10} className="text-emerald-500"/>
+                      <span className="text-[10px] text-emerald-400 font-mono tracking-tighter">{u.email}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
-  // login
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-green-900 p-8 rounded-2xl shadow-xl max-w-sm w-full">
-        <h1 className="text-2xl font-bold text-center mb-6">Login Sistem Mediu</h1>
-        <form onSubmit={handleLogin} className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium mb-1">Username</label>
-            <input type="text" className="w-full border-2 border-gray-200 dark:border-green-700 p-2 rounded-lg text-black focus:border-green-500 outline-none" value={username} onChange={e => setUsername(e.target.value)} required />
+    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center space-y-2">
+          <div className="mx-auto w-16 h-16 bg-emerald-500/10 rounded-3xl border border-emerald-500/20 flex items-center justify-center shadow-2xl shadow-emerald-500/10 mb-4 rotate-3">
+             <ShieldCheck className="text-emerald-500 w-8 h-8" />
           </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Password</label>
-            <input type="password" className="w-full border-2 border-gray-200 dark:border-green-700 p-2 rounded-lg text-black focus:border-green-500 outline-none" value={password} onChange={e => setPassword(e.target.value)} required />
-          </div>
-          <button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition-colors">
-            Intră în cont
-          </button>
-        </form>
+          <h1 className="text-3xl font-black text-white tracking-tight">Pannel</h1>
+          <p className="text-slate-500 text-sm">Access your environment monitoring dashboard</p>
+        </div>
+
+        <div className="bg-white/[0.03] border border-white/10 p-8 rounded-[2.5rem] shadow-2xl backdrop-blur-md">
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div className="space-y-4">
+              <div className="space-y-1.5 px-1">
+                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Username</label>
+                <input type="text" className="w-full bg-slate-900 border border-white/10 p-4 rounded-2xl text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all placeholder:text-slate-700" placeholder="enter username" value={username} onChange={e => setUsername(e.target.value)} required />
+              </div>
+              <div className="space-y-1.5 px-1">
+                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Password</label>
+                <input type="password" className="w-full bg-slate-900 border border-white/10 p-4 rounded-2xl text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all placeholder:text-slate-700" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required />
+              </div>
+            </div>
+            <button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 rounded-2xl transition-all shadow-lg shadow-emerald-500/20 uppercase tracking-widest text-sm flex items-center justify-center gap-2">
+              <LogIn size={18} /> Sign In
+            </button>
+          </form>
+        </div>
+        
+        <p className="text-center text-slate-700 text-xs italic">api v1.0 monitoring system</p>
       </div>
     </div>
   );
